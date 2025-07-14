@@ -33,7 +33,7 @@ class PicoScope3205D:
                 enabled: 0 no, 1 yes
                 range: look at ps3000aSetChannel Args in Picoscope docs
                 coupling: 1 DC, 0 AC
-                offset: ??? IDK maybe just keep it 0
+                offset: DC offset
             trigLvl: Trigger level in mV
             trigChannel: A or B for this model, see docs for more info
             trigMode: Level by default see docs for options
