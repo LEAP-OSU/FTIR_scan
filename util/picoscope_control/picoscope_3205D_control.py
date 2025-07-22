@@ -183,7 +183,7 @@ class PicoScope3205D:
                 return 2
             else:
                 raise ValueError("Currently only supports rising, can change this though")
-              
+
     def _setup_simple_trigger(self):
         print("Setting up simple trigger...")
         try:
@@ -208,8 +208,7 @@ class PicoScope3205D:
             print(f"Error setting up simple trigger: {e}")
             self._cleanup_failed_connection()
             raise
-
-    # Public Functions TODO: some of these should be private
+        
     def channel_to_bool(self, value):
         if value == "PS3000A_CHANNEL_A":
             return 0
@@ -217,6 +216,31 @@ class PicoScope3205D:
             return 1
         else:  # None or anything else
             raise ValueError("Incompatiable trigger channel (must be A or B, see docs for key)")
+
+    def get_timebase_conversion(self):
+        """
+        Calculates the sampling interval based on the current timebase. Throws an error if an invalid timbase is used
+        Args:
+            self: picoscope object
+        returns:
+            time: sampling interval
+        """
+        def formula1(timebase):
+            time = (2**timebase)/500000000
+            return time
+        def formula2(timebase):
+            time = (timebase-2) / 62500000
+            return time
+        
+        timeBase = self.sampling_config['timeBase']
+        if timeBase <= 2 and timeBase >= 0:
+            time = formula1(timeBase)
+        elif timeBase > 2 and timeBase <= (2**32 - 1):
+            time = formula2(timeBase)
+        else:
+            raise ValueError("Time base must be >= 0 and <= 2^32 - 1")
+
+        return time
 
     def setup_advanced_trigger(self):
         """
@@ -365,7 +389,7 @@ class PicoScope3205D:
 
             self._status["GetTimebase"] = ps.ps3000aGetTimebase2(
                                 self._chandle,                          # Device handle
-                                self.sampling_config['timeBase'],        # Timebase setting (2 by default)
+                                self.sampling_config['timeBase'],       # Timebase setting (2 by default)
                                 max_samples,                            # Requested number of samples
                                 ctypes.byref(time_interval_ns),         # Returns actual time interval
                                 1,                                      # Oversample (usually 1)
@@ -373,16 +397,6 @@ class PicoScope3205D:
                                 0                                       # Segment index (0 for single segment)
                             )
             assert_pico_ok(self._status["GetTimebase"])
-
-            sample_rate = 1 / (time_interval_ns.value * 1e-9)
-            # TODO: Max samples.value is -256? this is wrong but the code works fine, figure t why this is -256 and find out how to print the actual max samples
-            print("Sampling settings: " + str(self.sampling_config))
-            print("Time interval (ns): " + str(time_interval_ns.value))
-            print("Sample rate (Hz): " + str(sample_rate))
-            print("Max samples at this rate: " + str(returned_max_samples.value))
-            print("Requested samples: " + str(max_samples))
-            print("Sampling setup...")
-
 
             max_samples = self.sampling_config['preTriggerSamples'] + self.sampling_config['postTriggerSamples']
             overflow = ctypes.c_int16()
@@ -412,6 +426,7 @@ class PicoScope3205D:
 
             # Creates a overlow location for data
             overflow = (ctypes.c_int16 * 10)()
+            
             # Creates converted types maxsamples
             cmaxSamples = ctypes.c_int32(max_samples)
 
@@ -434,15 +449,11 @@ class PicoScope3205D:
             adc2mVChAMax =  adc2mV(bufferAMax, self.channel_config[channel]['range'], self.sampling_config['maxADC'])
 
             # Creates the time data
+            print(f'Sampling interval: {time_interval_ns.value} (ns)')
+            print(f'samples: {cmaxSamples.value}')
             time = np.linspace(0, (cmaxSamples.value - 1) * time_interval_ns.value, cmaxSamples.value)
 
-            # Plots the data from channel A onto a graph
-            plt.plot(time, adc2mVChAMax[:])
-            plt.xlabel('Time (ns)')
-            plt.ylabel('Voltage (mV)')
-            plt.show()
-
-            return True
+            return (time, adc2mVChAMax)
 
         except Exception as e:
             print(f"Error: {e}")

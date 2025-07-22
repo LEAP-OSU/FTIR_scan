@@ -47,7 +47,7 @@ def connect_to_motor(index = 0):
         
 def manual_jog_NP(motor, axis=1, speed=50):
     stop = 0
-    motor.setup_velocity(speed=speed)
+    motor.setup_velocity(speed = speed)
     print("Entering manual jog mode...")
     while not stop:
         steps = input("Enter number of steps (or 'q' to quit): ")

@@ -1,4 +1,4 @@
-import motor_control.pico_motor_control_NP as mc
+import util.motor_control.pico_motor_control_NP as mc
 from pylablib.devices import Newport
 import sys
 
@@ -17,4 +17,5 @@ if __name__ == "__main__":
     motor = mc.connect_to_motor()
 
     # Manual motor jog through terminal
-    mc.manual_jog_NP(motor, speed = 2)
+    # mc.move_motor(motor, 200, speed=300, repeat=50, delay=1.5)
+    mc.manual_jog_NP(motor, speed = 100)
