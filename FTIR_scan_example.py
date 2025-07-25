@@ -89,7 +89,7 @@ if __name__ == "__main__":
         "configA": {'enabled': 1, 'range': 4, 'coupling': 1, 'offset': 0}, #Set up to needs, determine range in test file
         "configB": {'enabled': 0, 'range': 7, 'coupling': 1, 'offset': 0},
         "trigEnable": 1, # Keep this on
-        "trigLvl": 60, # Determine this in GUI and transfer here (mV)
+        "trigLvl": 30, # Determine this in GUI and transfer here (mV)
         "trigChannel": "PS3000A_CHANNEL_A", # Probably wont touch this unless you switch channels
         "trigMode": "PS3000A_LEVEL", # or this
         "trigDirection": "RISING", # or this
@@ -99,8 +99,8 @@ if __name__ == "__main__":
     }
 
     scan_config = {
-        "totalSteps": 1000,
-        "stepIntervals": 1,
+        "totalSteps": 1200,
+        "stepIntervals": 2,
         "speed": 5,
         "delay": 0.5
     }
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         "pulse signals": pulse_signals,
         }
     
-    with open("scan_70att_0.1kHz_7-25-25.json", "w") as json_file:
+    with open("scan_2step_70att_50Hz_7-25-25.json", "w") as json_file:
         json.dump(ftir_scan, json_file, indent=4)
 
     # Process Data
@@ -138,7 +138,7 @@ if __name__ == "__main__":
         "pulse signals": pulse_signals,
         "spectrogram": spectrogram
         }
-    with open("scan_70att_0.1kHz_7-25-25.json", "w") as json_file:
+    with open("scan_2step_70att_50Hz_7-25-25.json", "w") as json_file:
         json.dump(ftir_scan, json_file, indent=4)
 
 
