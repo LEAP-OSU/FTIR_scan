@@ -86,16 +86,16 @@ def process_data(data, scope_config):
 
 if __name__ == "__main__":
     scope_config = {
-        "configA": {'enabled': 1, 'range': 4, 'coupling': 1, 'offset': 0},
+        "configA": {'enabled': 1, 'range': 4, 'coupling': 1, 'offset': 0}, #Set up to needs, determine range in test file
         "configB": {'enabled': 0, 'range': 7, 'coupling': 1, 'offset': 0},
-        "trigEnable": 1,
-        "trigLvl": 60,
-        "trigChannel": "PS3000A_CHANNEL_A",
-        "trigMode": "PS3000A_LEVEL",
-        "trigDirection": "RISING",
-        "postTriggerSamples": 100,
-        "preTriggerSamples": 15,
-        "timeBase": 0
+        "trigEnable": 1, # Keep this on
+        "trigLvl": 60, # Determine this in GUI and transfer here (mV)
+        "trigChannel": "PS3000A_CHANNEL_A", # Probably wont touch this unless you switch channels
+        "trigMode": "PS3000A_LEVEL", # or this
+        "trigDirection": "RISING", # or this
+        "postTriggerSamples": 100, # Excalty like they sound determine in picoscope_test.py
+        "preTriggerSamples": 15, #exactly like it sounds determine in picoscope_test.py
+        "timeBase": 0 # Determine in test files, this determines sampling rate
     }
 
     scan_config = {
