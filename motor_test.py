@@ -1,6 +1,10 @@
 import util.motor_control.pico_motor_control_NP as mc
 from pylablib.devices import Newport
 import sys
+import os
+
+dll_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "DLL"))
+os.environ["PATH"] = dll_path + os.pathsep + os.environ.get("PATH", "")
 
 # NOTES:
 # > Always close motor, if you dont you may get connection error. In that case
@@ -20,8 +24,3 @@ if __name__ == "__main__":
 
     # Manual motor jog through terminal
     mc.manual_jog_NP(motor, speed = 100)
-
-    # Move the motor back to the home position
-    current_position = motor.get_position()
-    distance_to_zero = -1 * current_position
-    mc.move_motor(motor, distance_to_zero, speed=100, repeat=1, delay=0)
