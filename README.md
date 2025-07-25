@@ -10,6 +10,11 @@ You will want to install the Picoscope 3205D GUI and SDK which can be found [her
 
 <img src="images/picoscope_install_page.png" alt="Picoscope Install page" width="500">
 
+**Picomotor:**
+
+You will also need the pico motor control software which is at the bottom of the page [here](https://www.newport.com/f/open-loop-picomotor-motion-controller)
+
+<img src="images/picomotor_install_page.png" alt="Picoscope Install page" width="500">
 
 ## Setting up Your Python Environment
 
