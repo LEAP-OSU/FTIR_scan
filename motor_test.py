@@ -19,5 +19,9 @@ if __name__ == "__main__":
     motor = mc.connect_to_motor()
 
     # Manual motor jog through terminal
-    # mc.move_motor(motor, 200, speed=300, repeat=50, delay=1.5)
     mc.manual_jog_NP(motor, speed = 100)
+
+    # Move the motor back to the home position
+    current_position = motor.get_position()
+    distance_to_zero = -1 * current_position
+    mc.move_motor(motor, distance_to_zero, speed=100, repeat=1, delay=0)

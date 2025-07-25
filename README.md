@@ -32,7 +32,19 @@ Here I will show you how to setup your python environment in the context of Anac
 
 After creating the python environment you will want to ensure that you are able to interface with both the picoscope 3205D and the Newport picomotor stage. To do this try to run the "motor_test.py" and "picoscope_test.py" scripts and fix any bugs that occur, feel free to contact Robert Miller if assistance is needed.
 
+**NOTE:** For you picoscope_test.py you will need to send a signal to the picoscope (from the function generator is the best for testing) and figure out what your range and trigger should be inside of the GUI first then put this into the scope configuration part of the code. I am currently working on simplifying the scope configuration to make it more pythonic and a bit easier to work with. For now if you have any quesiton please contact me (robert miller)
+
 ## Ensuring Spatial and Temporal Overlap
+
+Before any measurements are attempted you should make sure that the following are done:
+
+* The Mid-IR beam is aligned through the first two irises on the FTIR setup 
+
+* The arms of the interferometer are spatially overlapped (use camera)
+
+* The arms of the interferometer are temporally overlapped (scan stage, use camera)
+
+To align the mid IR beam send it down the same axis as the green beam then reflect the green beam into the system and align. It should be the case that both Mid-IR spots will hit the camera. From there you can visually find spatial overlap then scan the stage towards you then away from you until you find temporal overlap (fringes). Once you have fringes optimize the spatial overlap until you get the minimum number of fringes possible.
 
 
 
