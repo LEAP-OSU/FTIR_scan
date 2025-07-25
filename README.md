@@ -4,7 +4,15 @@ In this .README I will walk you through how to setup your computer to run the FT
 
 ### (1) Setting up Your Python Environment
 
-Here I will show you how to setup your python environment in the context of Anaconda/VS Code. If you use something else its probably similar just adapt it to your needs. 
+Here I will show you how to setup your python environment in the context of Anaconda/VS Code. If you use something else its probably similar just adapt it to your needs.
+
+(1) Clone the repository
+
+(2) Activate the anaconda terminal and navigate the the root directory of the repository
+
+(3) run the command "conda env create -f environment.yaml" this will create the conda environment using the provided .yaml file
+
+(4) activate the environment using "conda activate YAG_exp"
 
 
 
