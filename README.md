@@ -46,6 +46,15 @@ Before any measurements are attempted you should make sure that the following ar
 
 To align the mid IR beam send it down the same axis as the green beam then reflect the green beam into the system and align. It should be the case that both Mid-IR spots will hit the camera. From there you can visually find spatial overlap then scan the stage towards you then away from you until you find temporal overlap (fringes). Once you have fringes optimize the spatial overlap until you get the minimum number of fringes possible.
 
+## Determining Trigger and Range Settings
+
+To determine what your trigger settings should be you will need to look at the pulse signal on the picoscope GUI and move the stage until the amplitude modulation is present. The signal should look like the image below:
+
+**Insert Image**
+
+You will want to adjust your picoscope settings until you are triggering on the signal and you have an acceptable V/div / s/div. You will then want to write all of this down for the scope configuration arguments.
+
+
 
 
 

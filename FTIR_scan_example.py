@@ -4,6 +4,10 @@ from pylablib.devices import Newport
 import numpy as np
 import matplotlib.pyplot as plt
 import json
+import os
+
+dll_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "DLL"))
+os.environ["PATH"] = dll_path + os.pathsep + os.environ.get("PATH", "")
 
 
 def connect_devices(scope_config):
@@ -85,7 +89,7 @@ if __name__ == "__main__":
         "configA": {'enabled': 1, 'range': 4, 'coupling': 1, 'offset': 0},
         "configB": {'enabled': 0, 'range': 7, 'coupling': 1, 'offset': 0},
         "trigEnable": 1,
-        "trigLvl": 8,
+        "trigLvl": 60,
         "trigChannel": "PS3000A_CHANNEL_A",
         "trigMode": "PS3000A_LEVEL",
         "trigDirection": "RISING",
@@ -95,35 +99,28 @@ if __name__ == "__main__":
     }
 
     scan_config = {
-        "totalSteps": 1200,
+        "totalSteps": 1000,
         "stepIntervals": 1,
         "speed": 5,
         "delay": 0.5
     }
     
-    # # Collect Data
-    # scope, motor = connect_devices(scope_config)
-    # motor_positions, pulse_signals = ftir_scan(scope, motor, scan_config)
+    # Collect Data
+    scope, motor = connect_devices(scope_config)
+    motor_positions, pulse_signals = ftir_scan(scope, motor, scan_config)
 
-    # ftir_scan = {
-    #     "motor positions": motor_positions, 
-    #     "pulse signals": pulse_signals,
-    #     }
+    ftir_scan = {
+        "motor positions": motor_positions, 
+        "pulse signals": pulse_signals,
+        }
     
-    # with open("ftir_scan_OPA6.json", "w") as json_file:
-    #     json.dump(ftir_scan, json_file, indent=4)
+    with open("scan_70att_0.1kHz_7-25-25.json", "w") as json_file:
+        json.dump(ftir_scan, json_file, indent=4)
 
     # Process Data
-    with open("ftir_scan_OPA7.json", "r") as json_file:
-        ftir_data = json.load(json_file)
 
-
-    pulse_signals = ftir_data['pulse signals']
-    print(pulse_signals)
-    motor_positions = ftir_data['motor positions']
-
-    # dt = scope.get_timebase_conversion() / 2
-    # gate_width = 40 * dt
+    dt = scope.get_timebase_conversion() / 2
+    gate_width = 40 * dt
     spectrogram = process_data(pulse_signals, scope_config)
 
     # Plot Data
@@ -136,12 +133,12 @@ if __name__ == "__main__":
     plt.grid(True, alpha=0.3)
     plt.show()
 
-    # ftir_scan = {
-    #     "motor positions": motor_positions, 
-    #     "pulse signals": pulse_signals,
-    #     "spectrogram": spectrogram
-    #     }
-    # with open("ftir_scan_OPA6.json", "w") as json_file:
-    #     json.dump(ftir_scan, json_file, indent=4)
+    ftir_scan = {
+        "motor positions": motor_positions, 
+        "pulse signals": pulse_signals,
+        "spectrogram": spectrogram
+        }
+    with open("scan_70att_0.1kHz_7-25-25.json", "w") as json_file:
+        json.dump(ftir_scan, json_file, indent=4)
 
 
