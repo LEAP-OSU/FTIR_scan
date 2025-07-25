@@ -9,6 +9,8 @@ import sys
 #   motor fixture is torqued down enough (this wil present slipping).
 # > Fatal errors such as failure to connect to the motor will terminate the program.
 
+# This script runs the motor through some simple movement to ensure that your python environment is correct
+
 if __name__ == "__main__":
     # Check for motor controller connection
     mc.check_controller_connection()
