@@ -1,13 +1,14 @@
 import util.motor_control.pico_motor_control_NP as mc
-import util.picoscope_control.picoscope_3205D_control as pico
+import util.picoscope_control.picoscope_3205D_control as pico_scope
 from pylablib.devices import Newport
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
 
 def connect_devices(scope_config):
     # Create scope
-    scope = scope.PicoScope3250D(**scope_config)
+    scope = pico_scope.PicoScope3205D(**scope_config)
 
     # Verify sampling interval
     dt = scope.get_timebase_conversion() / 2
@@ -31,7 +32,7 @@ def ftir_scan(scope, motor, scan_config):
         
         # Collect signal from scope
         time, signal = scope.collect_data_block() # (ns), (mV)
-        data.append((time, signal))
+        data.append((time.tolist(), signal))
         current_position = motor.get_position(1)
         if current_position == 0 or (current_position%5) == 0:
             print(f'Current motor position: {current_position} steps')
@@ -39,29 +40,31 @@ def ftir_scan(scope, motor, scan_config):
 
     return positions, data
 
-def process_data(data, scope, scope_config, gate_width):
+def process_data(data, scope_config):
 
     spectrogram = []
 
     for i in range(0, len(data), 1):
 
+        length = len(data[i][1])
+        # dt = scope.get_timebase_conversion() / 2 # (ns)
+        # width = gate_width // dt
+        width = 40
+
         # Create gate function
         trigger_index = -1
         trigger_found = 0
-        while not trigger_found and trigger_index < len(data[i][1]):
+        while not trigger_found and trigger_index < length - 1:
             trigger_index += 1
-            if data[i][1][trigger_index] >= scope_config["triggerLvl"]:
+            if data[i][1][trigger_index] >= scope_config["trigLvl"]:
                 trigger_found = 1
 
         if not trigger_found:
-            gate = np.zeros(len(data[i][1]))
-        else:
-            dt = scope.get_timebase_conversion() / 2 # (ns)
-            width = gate_width // dt
-            length = len(data[i][1])
-
+            # if no trigger found assume no signal
             gate = np.zeros(length)
-            gate[trigger_index:trigger_index + width] = 1
+        else:
+            gate = np.zeros(length)
+            gate[int(trigger_index):int(trigger_index + width)] = 1
 
         # Apply gate function to signal
         gated_signal = np.array(data[i][1]) * gate
@@ -79,45 +82,66 @@ def process_data(data, scope, scope_config, gate_width):
 
 if __name__ == "__main__":
     scope_config = {
-        "configA": {'enabled': 1, 'range': 9, 'coupling': 1, 'offset': 0},
+        "configA": {'enabled': 1, 'range': 4, 'coupling': 1, 'offset': 0},
         "configB": {'enabled': 0, 'range': 7, 'coupling': 1, 'offset': 0},
         "trigEnable": 1,
-        "trigLvl": 0,
+        "trigLvl": 8,
         "trigChannel": "PS3000A_CHANNEL_A",
         "trigMode": "PS3000A_LEVEL",
         "trigDirection": "RISING",
-        "postTriggerSamples": 110000,
-        "preTriggerSamples": 5000,
-        "timeBase": 10
+        "postTriggerSamples": 100,
+        "preTriggerSamples": 15,
+        "timeBase": 0
     }
 
     scan_config = {
-        "totalSteps": 50000,
-        "stepIntervals": 5,
-        "speed": 10,
+        "totalSteps": 1200,
+        "stepIntervals": 1,
+        "speed": 5,
         "delay": 0.5
     }
     
-    # Collect Data
-    scope, motor = connect_devices(**scope_config)
-    motor_positions, pulse_signals = ftir_scan(scope, motor, **scan_config)
+    # # Collect Data
+    # scope, motor = connect_devices(scope_config)
+    # motor_positions, pulse_signals = ftir_scan(scope, motor, scan_config)
+
+    # ftir_scan = {
+    #     "motor positions": motor_positions, 
+    #     "pulse signals": pulse_signals,
+    #     }
+    
+    # with open("ftir_scan_OPA6.json", "w") as json_file:
+    #     json.dump(ftir_scan, json_file, indent=4)
 
     # Process Data
-    dt = scope.get_timebase_conversion() / 2
-    gate_width = 5000 * dt
-    spectrogram = process_data(pulse_signals, scope, scope_config, gate_width)
+    with open("ftir_scan_OPA7.json", "r") as json_file:
+        ftir_data = json.load(json_file)
+
+
+    pulse_signals = ftir_data['pulse signals']
+    print(pulse_signals)
+    motor_positions = ftir_data['motor positions']
+
+    # dt = scope.get_timebase_conversion() / 2
+    # gate_width = 40 * dt
+    spectrogram = process_data(pulse_signals, scope_config)
 
     # Plot Data
     plt.figure(figsize=(10,5))
-    plt.plot(motor_positions, spectrogram, color='r', linewidth=16)
-    plt.xtitle("Motor Position (steps)")
-    plt.ytitle("Time averaged signal value")
+    plt.plot(motor_positions, spectrogram, color='r', linewidth=2)
+    plt.xlabel("Motor Position (steps)")
+    plt.ylabel("Time averaged signal value")
     plt.title("FTIR Spectrogram")
     plt.legend()
     plt.grid(True, alpha=0.3)
     plt.show()
 
-    
-
+    # ftir_scan = {
+    #     "motor positions": motor_positions, 
+    #     "pulse signals": pulse_signals,
+    #     "spectrogram": spectrogram
+    #     }
+    # with open("ftir_scan_OPA6.json", "w") as json_file:
+    #     json.dump(ftir_scan, json_file, indent=4)
 
 

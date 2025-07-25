@@ -26,10 +26,13 @@ interferogram   = np.fft.ifft(fft_array).real
 interferogram *= 1e3                     # make the centre-burst huge
 interferogram += 0.02 * interferogram.max() * np.random.randn(N)
 
+# Shift interferogram to put ZPD at center (not unwrapped)
+interferogram_shifted = np.fft.fftshift(interferogram)
+
 # ---------- plotting ----------
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 8))
 
-ax1.plot(t, interferogram, lw=0.7)
+ax1.plot(t, interferogram_shifted, lw=0.7)
 ax1.set_xlabel('Time / Optical-Path Difference (cm)')
 ax1.set_ylabel('Intensity (a.u.)')
 ax1.set_title('Interferogram')
