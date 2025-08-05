@@ -1,6 +1,6 @@
 ##  What is FTIR? 
 
-Fourier Transform Infared Spectroscopy or (FTIR) is a method for obtatining the spectrum of some pulse train. The principle of operation are fairly simple. First an optical setup like the one below is built:
+Fourier Transform Infared Spectroscopy or (FTIR) is a method for obtatining the spectrum of some pulse train. The principles of operation are fairly simple. First an optical setup like the one below is built:
 
 <img src="images/optical_setup.png" alt="Optical Setup" width="500">
 
@@ -8,7 +8,7 @@ As the pulse train enters the system each pulse is split into two with one going
 
 To retrieve the spectrum of the pulse train the pulses are set so that one is hitting the detector completely before the other one (so the stage is set such that the OPD is past temproal overlap). Then as the stage is moved in the direction necessary to drag the pulses across each other temporally a box car averaging scheme is used on the photodiode signal to produce an "interferogram" which will look something like:
 
-<img src="images/interferogram_example.png" alt="Optical Setup" width="500">
+<img src="images/interferogram_examples.png" alt="Optical Setup" width="500">
 
 The fourier transform of this signal is then taken and the spectrum is produced.
 
