@@ -56,18 +56,24 @@ Before starting a scan you will want to first do the following:
 
 * Now with either the pico-motor app **or** the "motor_test.py" script, you will want to scan the stage until you are on one side of the temporal overlap region. This means scanning from one direction into the direction towards the desired side (+ or -) and watching the interference pattern until there is no more temporal overlap. You will want to note whether you are on the positive or negative side of the region so that you can scan in the opposite direction. 
 
-* 
+* At this point you will need to run the FTIR_scan_example.py script (or some custom copy of it) with the desired scope and scan configurations.
 
+## Final Notes / Next Things to do
 
+At the time of my departue (7/26/25) the following was done:
 
-**Insert Image**
+* A Si window was added infront of the photodiode to get rid of the ~1um noise.
 
-You will want to adjust your picoscope settings until you are triggering on the signal and you have an acceptable V/div / s/div. You will then want to write all of this down for the scope configuration arguments.
+* Preliminary scans were run showing a clear spike at ~3um the attenuation of the laser was optimized to ~71-72% with a 50 Hz repition rate (the frequency is less important)
 
+Things that should be done/looked into:
 
+* The motor step size seems to be quite a bit off of spec. I suspect this could be due to how light the mirror stands are but I am not sure. Either way one should properly calibrate the step size. To do this I reccomend running scans with just the OPA input and using the step differences between the peaks on the interferogram along with the known carrier frequency of the pulse train to calculate the actual step distance. I would do 3 trials @ several different "step_intervals" and determine if the step size is consistent. 
 
+* The signal seems to vary widely with the attenuation settings on the OPA controls. The main reason for modifying the attenuation settings is to overcome diode saturation. So if you can find another way to decrease the intensity of the pulses without adjusting the attenuation percentage (and thus the stability of the input) that would work as well. Either way one must look into optimizing the attenuation settings or somehow overcoming diode saturation by some other means. Note that I am assuming diode saturation is occuring due to the interferogram asymmetries on the top and bottom. 
 
+* Explore spectral broadening in YAG and a YAG-Si system.
 
+* Add a beam splitter to the OPA input so that the parabola and FTIR setup can be used at the same time.
 
-
-might need pyftdi installed, pylablib could be missing it.
+* Implementing the analog integrator and using the DC signal to generate the interferogram rather than using a digital gate/integration.
