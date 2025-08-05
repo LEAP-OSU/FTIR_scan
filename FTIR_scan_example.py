@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import json
 import os
 
+
 dll_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "DLL"))
 os.environ["PATH"] = dll_path + os.pathsep + os.environ.get("PATH", "")
 
@@ -84,7 +85,10 @@ def process_data(data, scope_config):
     
     return spectrogram
 
+
 if __name__ == "__main__":
+
+    # Set scope and scan configurations
     scope_config = {
         "configA": {'enabled': 1, 'range': 4, 'coupling': 1, 'offset': 0}, #Set up to needs, determine range in test file
         "configB": {'enabled': 0, 'range': 7, 'coupling': 1, 'offset': 0},
@@ -97,7 +101,6 @@ if __name__ == "__main__":
         "preTriggerSamples": 15, #exactly like it sounds determine in picoscope_test.py
         "timeBase": 0 # Determine in test files, this determines sampling rate
     }
-
     scan_config = {
         "totalSteps": 1200,
         "stepIntervals": 2,
@@ -105,23 +108,29 @@ if __name__ == "__main__":
         "delay": 0.5
     }
     
-    # Collect Data
+
+    # Connect to devices and run the scan
     scope, motor = connect_devices(scope_config)
     motor_positions, pulse_signals = ftir_scan(scope, motor, scan_config)
 
+
+    # Save data in case of issue
+    file_name = "test.json"
     ftir_scan = {
         "motor positions": motor_positions, 
         "pulse signals": pulse_signals,
         }
-    
-    with open("scan_2step_70att_50Hz_7-25-25.json", "w") as json_file:
+    with open(file_name, "w") as json_file:
         json.dump(ftir_scan, json_file, indent=4)
 
-    # Process Data
 
+    # Process Data
+    # This creates the interferogram and then add it to the above json object and rewrites the file
+    width_multiplier = 40
     dt = scope.get_timebase_conversion() / 2
-    gate_width = 40 * dt
+    gate_width = width_multiplier * dt
     spectrogram = process_data(pulse_signals, scope_config)
+
 
     # Plot Data
     plt.figure(figsize=(10,5))
@@ -133,12 +142,14 @@ if __name__ == "__main__":
     plt.grid(True, alpha=0.3)
     plt.show()
 
+
+    # Save data with interferogram
     ftir_scan = {
         "motor positions": motor_positions, 
         "pulse signals": pulse_signals,
         "spectrogram": spectrogram
         }
-    with open("scan_2step_70att_50Hz_7-25-25.json", "w") as json_file:
+    with open(file_name, "w") as json_file:
         json.dump(ftir_scan, json_file, indent=4)
 
 

@@ -6,7 +6,7 @@ In this .README I will walk you through how to setup your computer to run the FT
 
 **Picoscope:**
 
-You will want to install the Picoscope 3205D GUI and SDK which can be found [here](https://www.picotech.com/downloads)
+You will want to install the Picoscope 3205D GUI and SDK which can be found [here](https://www.picotech.com/downloads). Also see the **device-control** repository or **the link** for the API which can be useful for interpretting some of the codes arguments.
 
 <img src="images/picoscope_install_page.png" alt="Picoscope Install page" width="500">
 
@@ -46,9 +46,19 @@ Before any measurements are attempted you should make sure that the following ar
 
 To align the mid IR beam send it down the same axis as the green beam then reflect the green beam into the system and align. It should be the case that both Mid-IR spots will hit the camera. From there you can visually find spatial overlap then scan the stage towards you then away from you until you find temporal overlap (fringes). Once you have fringes optimize the spatial overlap until you get the minimum number of fringes possible.
 
-## Determining Trigger and Range Settings
+## Measurement Procedure
 
-To determine what your trigger settings should be you will need to look at the pulse signal on the picoscope GUI and move the stage until the amplitude modulation is present. The signal should look like the image below:
+Before starting a measurement one should ensure that they (1) have created the propper python environment and are able to interface with the stage and picoscope, (2) have aligned the system so that both spots are hitting the camera, and (3) Achieved satisfactory temporal/spatial overlap.
+
+Before starting a scan you will want to first do the following:
+
+* Open the picoscope GUI and set the scope settings so that you are able to view the pulse signal. You will need to write down these settings as they are parameters in the code to run the scan. 
+
+* Now with either the pico-motor app **or** the "motor_test.py" script, you will want to scan the stage until you are on one side of the temporal overlap region. This means scanning from one direction into the direction towards the desired side (+ or -) and watching the interference pattern until there is no more temporal overlap. You will want to note whether you are on the positive or negative side of the region so that you can scan in the opposite direction. 
+
+* 
+
+
 
 **Insert Image**
 
