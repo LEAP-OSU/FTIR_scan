@@ -1,6 +1,26 @@
+##  What is FTIR? 
+
+Fourier Transform Infared Spectroscopy or (FTIR) is a method for obtatining the spectrum of some pulse train. The principle of operation are fairly simple. First an optical setup like the one below is built:
+
+<img src="images/optical_setup.png" alt="Optical Setup" width="500">
+
+As the pulse train enters the system each pulse is split into two with one going along each arm of the interferometer. The lengths of the arms determine whether constructive or destructive interference will occur between the two pulses. This can be measured using a photodiode for the specified carrier frequencies. As the pulses are dragged across each other temporally (using the stage to change the OPD) the output signal amplitude will oscillate as the phase between the pulses change. The signal amplitude will oscillate in an envelope determined by the pulses intensity envelopes.
+
+To retrieve the spectrum of the pulse train the pulses are set so that one is hitting the detector completely before the other one (so the stage is set such that the OPD is past temproal overlap). Then as the stage is moved in the direction necessary to drag the pulses across each other temporally a box car averaging scheme is used on the photodiode signal to produce an "interferogram" which will look something like:
+
+<img src="images/interferogram_example.png" alt="Optical Setup" width="500">
+
+The fourier transform of this signal is then taken and the spectrum is produced.
+
+<img src="images/spectrum_example.png" alt="Optical Setup" width="500">
+
+The "box car averaging scheme" simply applies a gate to the photodiode signal then sums each data point and divides by the width of the gate to produce a single scalar. This value is the data point for that stage position on the interferogram.
+
+To produce the x axis of the spectrum as wavelength you need to know the step size which can be calibrated (see later sections for explanation how). 
+
 ## Setting up The FTIR Scan
 
-In this .README I will walk you through how to setup your computer to run the FTIR scan code and show you what results should be produced. As of right now there is no explanation of FTIR in the document (there will be eventually) so hopefully you know what it is. If not you should still be able to take this measurement with these instructions. 
+Below I will walk you through how to setup your computer to run the FTIR scan code as well what the next steps should be.
 
 ## Installing Pico-Motor and Pico-Scope Control Software
 
